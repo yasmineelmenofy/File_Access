@@ -1,14 +1,12 @@
-#include "file_acess.h"
 #include <stdio.h>
 #include <string.h>
+#include "file_acess.h"
 #include "struct.h"
 
 int main() {
     const char *filename_studentrecord = "studentrecord.txt";
     const char *filename_password = "password.txt";
-
     DFF_vCreateStudentRecordsFile(filename_studentrecord);
-
     DFF_vCreateAdminPasswordsFile(filename_password);
 
     int choice;
@@ -24,53 +22,51 @@ int main() {
 
         switch (choice) {
             case 1:
-                printf("Enter student ID: ");
-                int id;
-                scanf("%d", &id);
-                getchar();
+                {
+                    printf("Enter student ID: ");
+                    int id;
+                    scanf("%d", &id);
+                    getchar();
+                    printf("Enter student name: ");
+                    char name[50];
+                    scanf(" %[^\n]", name);
+                    printf("Enter student course: ");
+                    char course[50];
+                    scanf(" %[^\n]", course);
+                    printf("Enter student GPA: ");
+                    float gpa;
+                    scanf("%f", &gpa);
+                    StudentRecord newStudent = {id, "", "", 0.0};
+                    strncpy(newStudent.name, name, sizeof(newStudent.name));
+                    strncpy(newStudent.course, course, sizeof(newStudent.course));
+                    newStudent.gpa = gpa;
 
-                printf("Enter student name: ");
-                char name[50];
-                scanf("%s", name);
-
-                printf("Enter student course: ");
-                char course[50];
-                scanf("%s", course);
-
-                printf("Enter student GPA: ");
-                float gpa;
-                scanf("%f", &gpa);
-
-                StudentRecord newStudent = {id, name, course, gpa};
-                if (!DFF_bIsDuplicateStudentRecord(filename_studentrecord, &newStudent)) {
                     DFF_vWriteStudentRecord(filename_studentrecord, &newStudent);
                     printf("Student record added successfully!\n");
-                } else {
-                    printf("Error: Student record already exists!\n");
                 }
                 break;
             case 2:
-                printf("Enter admin username: ");
-                char username[50];
-                scanf("%s", username);
+                {
+                    printf("Enter admin username: ");
+                    char username[50];
+                    scanf("%s", username);
 
-                printf("Enter admin password: ");
-                char password[50];
-                scanf("%s", password);
-                if (!DFF_bIsDuplicateAdminPassword(filename_password, username)) {
+                    printf("Enter admin password: ");
+                    char password[50];
+                    scanf("%s", password);
 
-                    DFF_vWriteAdminPassword(filename_password, &(AdminPassword){username, password});
+                    AdminPassword newAdmin = {"", ""}; // Initialize other fields
+                    strncpy(newAdmin.username, username, sizeof(newAdmin.username));
+                    strncpy(newAdmin.password, password, sizeof(newAdmin.password));
+
+                    DFF_vWriteAdminPassword(filename_password, &newAdmin);
                     printf("Admin password added successfully!\n");
-                } else {
-                    printf("Error: Admin password already exists!\n");
                 }
                 break;
             case 3:
-
                 DFF_vReadStudentRecords(filename_studentrecord);
                 break;
             case 4:
-
                 DFF_vReadAdminPasswords(filename_password);
                 break;
             case 5:
@@ -84,5 +80,7 @@ int main() {
 
     return 0;
 }
+
+
 
 
