@@ -55,7 +55,7 @@ int main() {
                     char password[50];
                     scanf("%s", password);
 
-                    AdminPassword newAdmin = {"", ""}; // Initialize other fields
+                    AdminPassword newAdmin = {"", ""}; 
                     strncpy(newAdmin.username, username, sizeof(newAdmin.username));
                     strncpy(newAdmin.password, password, sizeof(newAdmin.password));
 
