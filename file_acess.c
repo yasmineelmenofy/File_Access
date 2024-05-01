@@ -1,6 +1,12 @@
 #include "file_acess.h"
 #include <stdio.h>
 #include "struct.h"
+#define MAX_STUDENTS 100
+#define MAX_FIELD_LENGTH 100
+#define MAX_ADMIN 100
+#define MAX_USERNAME_LENGTH 50
+#define MAX_PASSWORD_LENGTH 50
+
 /*
  * FILE: file_acess.c
  * AUTHOR: Yasmine Elmenofy
@@ -13,30 +19,6 @@
  * Use this function to create a file for student records. If the file is created, it will open it.
  * ID, name, course, and GPA will be written as header in the file the first time the file is created only.
  */
-void DFF_vCreateStudentRecordsFile(const char *filename_studentrecord) {
-    FILE *file = fopen(filename_studentrecord, "a");
-    if (file != NULL) {
-        fseek(file, 0, SEEK_END);
-        long size = ftell(file);
-        if (size == 0) {
-            fprintf(file, "ID,Name,Course,GPA\n");
-        }
-        fclose(file);
-    } else {
-        printf("Error: Unable to create student records file %s\n", filename_studentrecord);
-    }
-}
-/*
- * Use this function to create a file to record admin usernames and passwords.
- */
-void DFF_vCreateAdminPasswordsFile(const char *filename_password) {
-    FILE *file = fopen(filename_password, "a");
-    if (file != NULL) {
-        fclose(file);
-    } else {
-        printf("Error: Unable to create admin passwords file %s\n", filename_password);
-    }
-}
 /*
  * Use this function to record the information about a student in the file.
  */
@@ -68,32 +50,50 @@ void DFF_vReadStudentRecords(const char *filename_studentrecord) {
     FILE *file = fopen(filename_studentrecord, "r");
     if (file != NULL) {
         printf("Student Records:\n");
+        char records[MAX_STUDENTS][MAX_FIELD_LENGTH];
+        int row = 0;
+        int col = 0;
         int ch;
-        while ((ch = getc(file)) != EOF) {
-            putchar(ch);
+        while ((ch = getc(file)) != EOF && row < MAX_STUDENTS) {
+            if (ch == ',' || ch == '\n') {
+                records[row][col] = '\0'; // Null-terminate the string
+                row++; // Move to the next row
+                col = 0; // Reset column index
+            } else {
+                records[row][col] = ch;
+                col++; // Move to the next column
+            }
         }
         fclose(file);
+        for (int i = 0; i < row; i++) {
+            printf("%s\n", records[i]);
+        }
     } else {
         printf("Error: Unable to open student records file %s\n", filename_studentrecord);
     }
 }
 
-/*
- * Use this function to read and display admin usernames and passwords from the file.
- */
 void DFF_vReadAdminPasswords(const char *filename_password) {
     FILE *file = fopen(filename_password, "r");
     if (file != NULL) {
         printf("Admin Passwords:\n");
-        char username[50], password[50];
-        while (fscanf(file, "%[^,],%s\n", username, password) != EOF) {
-            printf("Username: %s\tPassword: %s\n", username, password);
+        char usernames[MAX_ADMIN][MAX_USERNAME_LENGTH];
+        char passwords[MAX_ADMIN][MAX_PASSWORD_LENGTH];
+        int count = 0;
+        while (count < MAX_ADMIN && fscanf(file, "%[^,],%s\n", usernames[count], passwords[count]) == 2) {
+            count++;
         }
         fclose(file);
+
+
+        for (int i = 0; i < count; i++) {
+            printf("Username: %s\tPassword: %s\n", usernames[i], passwords[i]);
+        }
     } else {
         printf("Error: Unable to open admin passwords file %s\n", filename_password);
     }
 }
+
 
 
 

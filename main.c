@@ -4,10 +4,8 @@
 #include "struct.h"
 
 int main() {
-    const char *filename_studentrecord = "studentrecord.txt";
+    const char *filename_studentrecord = "Student.record.txt";
     const char *filename_password = "password.txt";
-    DFF_vCreateStudentRecordsFile(filename_studentrecord);
-    DFF_vCreateAdminPasswordsFile(filename_password);
 
     int choice;
     do {
@@ -23,45 +21,31 @@ int main() {
         switch (choice) {
             case 1:
                 {
-                    printf("Enter student ID: ");
-                    int id;
-                    scanf("%d", &id);
-                    getchar();
-                    printf("Enter student name: ");
-                    char name[50];
-                    scanf(" %[^\n]", name);
-                    printf("Enter student course: ");
-                    char course[50];
-                    scanf(" %[^\n]", course);
-                    printf("Enter student GPA: ");
-                    float gpa;
-                    scanf("%f", &gpa);
-                    StudentRecord newStudent = {id, "", "", 0.0};
-                    strncpy(newStudent.name, name, sizeof(newStudent.name));
-                    strncpy(newStudent.course, course, sizeof(newStudent.course));
-                    newStudent.gpa = gpa;
+                   StudentRecord student;
+    printf("Enter student ID: ");
+    scanf("%d", &student.id);
+    printf("Enter student name: ");
+    scanf(" %[^\n]", student.name);
+    printf("Enter student course: ");
+    scanf(" %[^\n]", student.course);
+    printf("Enter student GPA: ");
+    scanf("%f", &student.gpa);
 
-                    DFF_vWriteStudentRecord(filename_studentrecord, &newStudent);
-                    printf("Student record added successfully!\n");
-                }
+    DFF_vWriteStudentRecord(filename_studentrecord, &student);
+}
+
                 break;
             case 2:
                 {
-                    printf("Enter admin username: ");
-                    char username[50];
-                    scanf("%s", username);
+                     AdminPassword admin;
+    printf("Enter admin username: ");
+    scanf(" %[^\n]", admin.username);
+    printf("Enter admin password: ");
+    scanf(" %[^\n]", admin.password);
 
-                    printf("Enter admin password: ");
-                    char password[50];
-                    scanf("%s", password);
 
-                    AdminPassword newAdmin = {"", ""}; 
-                    strncpy(newAdmin.username, username, sizeof(newAdmin.username));
-                    strncpy(newAdmin.password, password, sizeof(newAdmin.password));
-
-                    DFF_vWriteAdminPassword(filename_password, &newAdmin);
-                    printf("Admin password added successfully!\n");
-                }
+    DFF_vWriteAdminPassword(filename_password, &admin);
+}
                 break;
             case 3:
                 DFF_vReadStudentRecords(filename_studentrecord);
@@ -80,7 +64,3 @@ int main() {
 
     return 0;
 }
-
-
-
-
